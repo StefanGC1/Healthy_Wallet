@@ -2,6 +2,7 @@ package com.example.healthy_wallet;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 
@@ -16,8 +17,19 @@ public class AddTransactionForm {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        TextField typeField = new TextField();
-        typeField.setPromptText("Type");
+//        TextField typeField = new TextField();
+//        typeField.setPromptText("Type");
+
+        // Radio buttons for type selection
+        ToggleGroup typeGroup = new ToggleGroup();
+        RadioButton incomeButton = new RadioButton("Income");
+        incomeButton.setToggleGroup(typeGroup);
+        incomeButton.setSelected(true);  // Default to Income
+        RadioButton expenseButton = new RadioButton("Expense");
+        expenseButton.setToggleGroup(typeGroup);
+
+        HBox typeBox = new HBox(10, incomeButton, expenseButton);
+
         TextField amountField = new TextField();
         amountField.setPromptText("Amount");
         TextField dateField = new TextField();
@@ -28,7 +40,7 @@ public class AddTransactionForm {
         categoryField.setPromptText("Category (leave empty for no category)");
 
         grid.add(new Label("Type:"), 0, 0);
-        grid.add(typeField, 1, 0);
+        grid.add(typeBox, 1, 0);
         grid.add(new Label("Amount:"), 0, 1);
         grid.add(amountField, 1, 1);
         grid.add(new Label("Date:"), 0, 2);
@@ -43,7 +55,7 @@ public class AddTransactionForm {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                String type = typeField.getText();
+                String type = ((RadioButton) typeGroup.getSelectedToggle()).getText();
                 double amount = Double.parseDouble(amountField.getText());
                 LocalDate date = LocalDate.parse(dateField.getText());
                 String description = descriptionField.getText();
