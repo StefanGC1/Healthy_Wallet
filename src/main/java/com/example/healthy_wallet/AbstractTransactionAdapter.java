@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 
 public class AbstractTransactionAdapter implements JsonSerializer<AbstractTransaction>, JsonDeserializer<AbstractTransaction> {
-
+// Unsure if used
     @Override
     public JsonElement serialize(AbstractTransaction src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();

@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,7 +27,7 @@ public class FileStorage {
         try (FileWriter writer = new FileWriter(FILE_PATH)) {
             gson.toJson(transactions, writer);
         } catch (FileNotFoundException e) {
-            System.err.println("Error: The file was not found / could not be opened.");
+            System.err.println("Error: The file to write to was not found / could not be opened.");
         } catch (IOException e) {
             System.err.println("Error: Could not write to file.");
         }
@@ -41,8 +38,8 @@ public class FileStorage {
             Type type = new TypeToken<ArrayList<AbstractTransaction>>(){}.getType();
             return gson.fromJson(reader, type);
         } catch (FileNotFoundException e) {
-            System.err.println("Error: The file 'transactions.txt' was not found / could not be opened.");
-            System.exit(1);
+            System.err.println("Error: The file to read from was not found / could not be opened.");
+            return null;
         } catch (IOException e) {
             System.err.println("Error: Could not read from file.");
             System.exit(1);

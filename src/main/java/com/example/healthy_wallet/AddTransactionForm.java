@@ -3,6 +3,7 @@ package com.example.healthy_wallet;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 
@@ -14,13 +15,9 @@ public class AddTransactionForm {
         dialog.setTitle("Add Transaction");
 
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
+        grid.setHgap(20);
+        grid.setVgap(20);
 
-//        TextField typeField = new TextField();
-//        typeField.setPromptText("Type");
-
-        // Radio buttons for type selection
         ToggleGroup typeGroup = new ToggleGroup();
         RadioButton incomeButton = new RadioButton("Income");
         incomeButton.setToggleGroup(typeGroup);
@@ -39,6 +36,12 @@ public class AddTransactionForm {
         TextField categoryField = new TextField();
         categoryField.setPromptText("Category (leave empty for no category)");
 
+        Label errorLabel = new Label();
+        errorLabel.setTextFill(Color.RED);
+        errorLabel.setVisible(false);
+        errorLabel.setWrapText(true);
+        errorLabel.setMaxWidth(300);
+
         grid.add(new Label("Type:"), 0, 0);
         grid.add(typeBox, 1, 0);
         grid.add(new Label("Amount:"), 0, 1);
@@ -47,31 +50,54 @@ public class AddTransactionForm {
         grid.add(dateField, 1, 2);
         grid.add(new Label("Description:"), 0, 3);
         grid.add(descriptionField, 1, 3);
-        grid.add(new Label("Description:"), 0, 4);
+        grid.add(new Label("Category:"), 0, 4);
         grid.add(categoryField, 1, 4);
+        grid.add(errorLabel, 1, 5, 2, 1);
 
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Button okButton = new Button("OK");
+        okButton.setOnAction(event -> {
+            try {
+                ParsedData parsedData = FormDataParser.parseAndSanitize(
+                        amountField.getText(),
+                        dateField.getText(),
+                        descriptionField.getText(),
+                        categoryField.getText()
+                );
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
                 String type = ((RadioButton) typeGroup.getSelectedToggle()).getText();
-                double amount = Double.parseDouble(amountField.getText());
-                LocalDate date = LocalDate.parse(dateField.getText());
-                String description = descriptionField.getText();
-                String category = categoryField.getText();
+                double amount = parsedData.amount;
+                LocalDate date = parsedData.date;
+                String description = parsedData.description;
+                String category = parsedData.category;
 
                 AbstractTransaction transaction;
                 if (type.equals("Income")) {
                     transaction = new Income(amount, date, description, category);
-                } else { // Defaulting to Expense
+                } else {
                     transaction = new Expense(amount, date, description, category);
                 }
                 transactionList.getItems().add(transaction);
+
+                dialog.setResult(ButtonType.OK);
+            } catch (IllegalArgumentException | InvalidDateException e) {
+                errorLabel.setText(e.getMessage());
+                errorLabel.setVisible(true);
+                event.consume();
             }
-            return null;
         });
 
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(event -> dialog.setResult(ButtonType.CANCEL));
+
+        HBox buttonBar = new HBox(10, okButton, cancelButton);
+        grid.add(buttonBar, 1, 6);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefSize(400, 300);
+
+        dialog.setResultConverter(dialogButton -> {
+            return null;
+        });
         dialog.showAndWait();
     }
 }
