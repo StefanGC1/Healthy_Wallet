@@ -1,9 +1,12 @@
 package com.example.healthy_wallet;
 
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 
@@ -15,6 +18,7 @@ public class AddTransactionForm {
         dialog.setTitle("Add Transaction");
 
         GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
         grid.setHgap(20);
         grid.setVgap(20);
 
@@ -36,12 +40,6 @@ public class AddTransactionForm {
         TextField categoryField = new TextField();
         categoryField.setPromptText("Category (leave empty for no category)");
 
-        Label errorLabel = new Label();
-        errorLabel.setTextFill(Color.RED);
-        errorLabel.setVisible(false);
-        errorLabel.setWrapText(true);
-        errorLabel.setMaxWidth(300);
-
         grid.add(new Label("Type:"), 0, 0);
         grid.add(typeBox, 1, 0);
         grid.add(new Label("Amount:"), 0, 1);
@@ -52,7 +50,6 @@ public class AddTransactionForm {
         grid.add(descriptionField, 1, 3);
         grid.add(new Label("Category:"), 0, 4);
         grid.add(categoryField, 1, 4);
-        grid.add(errorLabel, 1, 5, 2, 1);
 
         Button okButton = new Button("OK");
         okButton.setOnAction(event -> {
@@ -80,8 +77,7 @@ public class AddTransactionForm {
 
                 dialog.setResult(ButtonType.OK);
             } catch (IllegalArgumentException | InvalidDateException e) {
-                errorLabel.setText(e.getMessage());
-                errorLabel.setVisible(true);
+                showErrorAlert(e.getMessage());
                 event.consume();
             }
         });
@@ -99,5 +95,13 @@ public class AddTransactionForm {
             return null;
         });
         dialog.showAndWait();
+    }
+
+    private static void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

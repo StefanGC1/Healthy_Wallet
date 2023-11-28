@@ -1,16 +1,19 @@
 package com.example.healthy_wallet;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import java.util.List;
 
-public class AppGUI extends Application {
+public class TransactionListActivity extends Application {
 
     private ListView<AbstractTransaction> transactionList;
     private FileStorage fileStorage = new FileStorage();
@@ -42,7 +45,6 @@ public class AppGUI extends Application {
             // TODO: Handle Possible Exceptions
         }
 
-        // Save transactions at shutdown
         primaryStage.setOnCloseRequest((WindowEvent we) -> {
             try {
                 fileStorage.saveTransactions(transactionList.getItems());
@@ -53,6 +55,7 @@ public class AppGUI extends Application {
 
         Button addButton = new Button("Add");
         Button removeButton = new Button("Remove");
+        Button backButton = new Button("Back to Main Menu");
 
         addButton.setOnAction(e -> AddTransactionForm.display(primaryStage, transactionList));
         removeButton.setOnAction(e -> {
@@ -61,17 +64,31 @@ public class AppGUI extends Application {
                 transactionList.getItems().remove(selectedIndex);
             }
         });
+        backButton.setOnAction(e -> returnToMainMenu(primaryStage));
 
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(transactionList, addButton, removeButton);
+        VBox buttonBox = new VBox(20);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(addButton, removeButton, backButton);
 
-        Scene scene = new Scene(layout, 400, 300);
+        VBox layout = new VBox();
+        layout.getChildren().addAll(transactionList, buttonBox);
+        layout.setBackground(new Background(new BackgroundFill(Color.web("#5CBF62"), CornerRadii.EMPTY, Insets.EMPTY)));
+        VBox.setVgrow(buttonBox, Priority.ALWAYS);
+
+        Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Healthy Wallet");
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private void returnToMainMenu(Stage stage) {
+        try {
+            fileStorage.saveTransactions(transactionList.getItems());
+        } catch (Exception e) {
+            // TODO: Handle Possible Exceptions
+        }
+
+        MainMenuActivity mainMenu = new MainMenuActivity();
+        mainMenu.start(stage);
     }
 }
