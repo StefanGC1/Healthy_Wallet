@@ -4,49 +4,82 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Account {
-    private TransactionDatesManager dateManager;
-    private CalendarManager calendarManager;
+	private static volatile Account instance = null;
     private double balance;
+    private int userID;
+    private List<AbstractTransaction> transactions;
 
     public Account() {
-        dateManager = new TransactionDatesManager();
-        calendarManager = new CalendarManager();
-        balance = 0.0;
+        this.balance = 0.0;
+        this.transactions = new ArrayList<>();
+        instance = this;
+    }
+	
+	public static Account getInstance() {
+        if (instance == null) {
+            instance = new Account();
+        }
+        return instance;
+    }
+
+    public static void clearInstance() {
+        instance = null;
+    }
+
+    public void setTransactions(List<AbstractTransaction> transactions) {
+        for (AbstractTransaction transaction: transactions)
+            addTransaction(transaction);
     }
 
     public void addTransaction(AbstractTransaction transaction) {
-        dateManager.addTransaction(transaction);
-        updateBalance(transaction);
-        updateCalendarRange(transaction);
-    }
-
-    private void updateBalance(AbstractTransaction transaction) {
+        transactions.add(transaction);
         if (transaction instanceof Income) {
             balance += transaction.getAmount();
         } else if (transaction instanceof Expense) {
             balance -= transaction.getAmount();
+        }
+        // Additional logic can be added here for different types of transactions
+    }
+
+    public void removeTransaction(int index) {
+        AbstractTransaction removedTransaction = transactions.remove(index);
+
+        if (removedTransaction instanceof Income) {
+            balance -= removedTransaction.getAmount();
+        } else if (removedTransaction instanceof Expense) {
+            balance += removedTransaction.getAmount();
+        }
+    }
+
+    public void updateTransaction(AbstractTransaction original, AbstractTransaction updated) {
+        int index = transactions.indexOf(original);
+        if (index != -1) {
+            transactions.set(index, updated);
+            // Recalculate the balance by removing the original and adding the updated transaction
+            if (original instanceof Income) {
+                balance -= original.getAmount();
+            } else if (original instanceof Expense) {
+                balance += original.getAmount();
+            }
+
+            if (updated instanceof Income) {
+                balance += updated.getAmount();
+            } else if (updated instanceof Expense) {
+                balance -= updated.getAmount();
+            }
         }
     }
 
     public double getBalance() {
         return balance;
     }
+    public void setUserID(int _userID) { this.userID = _userID; }
+    public int getUserID() { return userID; }
 
-    public List<AbstractTransaction> getTransactionsByDate(LocalDate date) {
-        return dateManager.getTransactionsByDate(date);
-    }
-
-    private void updateCalendarRange(AbstractTransaction transaction) {
-        LocalDate transactionDate = transaction.getDate();
-        // TODO: Update startDate and endDate of calendarManager if some conditions are met
-    }
-
-    public List<LocalDate> getDatesOfMonth(YearMonth yearMonth) {
-        return calendarManager.getDatesOfMonth(yearMonth);
-    }
-
-    public List<LocalDate> getDatesOfYear(int year) {
-        return calendarManager.getDatesOfYear(year);
-    }
+    public List<AbstractTransaction> getTransactions() { return transactions; }
+    // Additional utility methods as needed
 }

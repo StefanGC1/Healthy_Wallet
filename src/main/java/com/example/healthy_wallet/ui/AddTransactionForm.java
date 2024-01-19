@@ -1,14 +1,15 @@
-package com.example.healthy_wallet;
+package com.example.healthy_wallet.ui;
 
-import javafx.geometry.HPos;
+import com.example.healthy_wallet.AbstractTransaction;
+import com.example.healthy_wallet.Account;
+import com.example.healthy_wallet.InvalidDateException;
+import com.example.healthy_wallet.utils.FormDataParser;
+import com.example.healthy_wallet.utils.Utilities;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import java.time.LocalDate;
 
 public class AddTransactionForm {
 
@@ -40,6 +41,10 @@ public class AddTransactionForm {
         TextField categoryField = new TextField();
         categoryField.setPromptText("Category (leave empty for no category)");
 
+        ComboBox<String> priorityBox = new ComboBox<>();
+        priorityBox.getItems().addAll("Very Low", "Low", "Medium", "High", "Very High");
+        priorityBox.setValue("Low");
+
         grid.add(new Label("Type:"), 0, 0);
         grid.add(typeBox, 1, 0);
         grid.add(new Label("Amount:"), 0, 1);
@@ -50,34 +55,39 @@ public class AddTransactionForm {
         grid.add(descriptionField, 1, 3);
         grid.add(new Label("Category:"), 0, 4);
         grid.add(categoryField, 1, 4);
+        grid.add(new Label("Priority:"), 0, 5);
+        grid.add(priorityBox, 1, 5);
 
         Button okButton = new Button("OK");
         okButton.setOnAction(event -> {
             try {
-                ParsedData parsedData = FormDataParser.parseAndSanitize(
+                AbstractTransaction newTransaction = FormDataParser.parseAndSanitizeTransactionData(
+                        ((RadioButton) typeGroup.getSelectedToggle()).getText(),
                         amountField.getText(),
                         dateField.getText(),
                         descriptionField.getText(),
-                        categoryField.getText()
+                        categoryField.getText(),
+                        priorityBox.getValue()
                 );
 
-                String type = ((RadioButton) typeGroup.getSelectedToggle()).getText();
-                double amount = parsedData.amount;
-                LocalDate date = parsedData.date;
-                String description = parsedData.description;
-                String category = parsedData.category;
+                transactionList.getItems().add(newTransaction);
+                Account account = Account.getInstance();
+                account.addTransaction(newTransaction);
 
-                AbstractTransaction transaction;
-                if (type.equals("Income")) {
-                    transaction = new Income(amount, date, description, category);
-                } else {
-                    transaction = new Expense(amount, date, description, category);
-                }
-                transactionList.getItems().add(transaction);
+                Thread thread = new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       Utilities.addTransactionToDatabase(newTransaction);
+                   }
+                });
+
+                thread.start();
+
+//                Utilities.addTransactionToDatabase(newTransaction);
 
                 dialog.setResult(ButtonType.OK);
             } catch (IllegalArgumentException | InvalidDateException e) {
-                showErrorAlert(e.getMessage());
+                Utilities.showErrorAlert(e.getMessage());
                 event.consume();
             }
         });
@@ -95,13 +105,5 @@ public class AddTransactionForm {
             return null;
         });
         dialog.showAndWait();
-    }
-
-    private static void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

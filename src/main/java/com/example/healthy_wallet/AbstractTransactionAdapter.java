@@ -15,6 +15,7 @@ public class AbstractTransactionAdapter implements JsonSerializer<AbstractTransa
         result.add("date", new JsonPrimitive(src.getDate().toString()));
         result.add("description", new JsonPrimitive(src.getDescription()));
         result.add("category", new JsonPrimitive(src.getCategory()));
+        result.add("priority",new JsonPrimitive(src.getPriority().toString()));
         return result;
     }
 
@@ -26,12 +27,13 @@ public class AbstractTransactionAdapter implements JsonSerializer<AbstractTransa
         LocalDate date = LocalDate.parse(jsonObject.get("date").getAsString());
         String description = jsonObject.get("description").getAsString();
         String category = jsonObject.getAsJsonObject("category").get("categoryName").getAsString();
+        TransactionPriority priority = TransactionPriority.valueOf(jsonObject.get("priority").getAsString());
 
         AbstractTransaction transaction;
         if ("Income".equals(type)) {
             transaction = new Income(amount, date, description, category);
         } else if ("Expense".equals(type)) {
-            transaction = new Expense(amount, date, description, category);
+            transaction = new Expense(amount, date, description, category, priority);
         } else {
             throw new JsonParseException("Unknown element type: " + type);
         }

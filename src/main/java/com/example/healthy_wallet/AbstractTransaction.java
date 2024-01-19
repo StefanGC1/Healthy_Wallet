@@ -8,12 +8,14 @@ public abstract class AbstractTransaction implements ITransaction {
     protected LocalDate date;
     protected String description;
     protected AbstractCategory category;
+    protected TransactionPriority priority;
 
     // Constructor
-    public AbstractTransaction(double amount, LocalDate date, String description) {
+    public AbstractTransaction(double amount, LocalDate date, String description, TransactionPriority priority) {
         this.amount = amount;
         this.date = date;
         this.description = (description == null || description.isEmpty()) ? "No description" : description;
+        this.priority = priority;
     }
 
     @Override
@@ -33,4 +35,6 @@ public abstract class AbstractTransaction implements ITransaction {
 
     @Override
     public String getCategory() { return category.getCategory(); }
+
+    public TransactionPriority getPriority() { return priority; }
 }

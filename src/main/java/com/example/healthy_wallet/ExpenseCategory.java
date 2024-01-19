@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ExpenseCategory extends AbstractCategory{
     private static final Map<String, Integer> categoryCount = new HashMap<>();
-    private static Integer totalCount = 0;
+    private static int totalCount = 0;
 
     public ExpenseCategory(String categoryName) {
         super(categoryName);
@@ -17,7 +17,7 @@ public class ExpenseCategory extends AbstractCategory{
 
     @Override
     public double getPercentageOfCategory() {
-        return 100.0 * categoryCount.get(this.getCategory()) / totalCount;
+        return 100.0 * categoryCount.get(this.categoryName) / totalCount;
     }
 
     public static Map<String, Double> getPercentagesOfAllCategories() {

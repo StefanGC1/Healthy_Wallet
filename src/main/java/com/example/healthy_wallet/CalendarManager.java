@@ -1,39 +1,59 @@
 package com.example.healthy_wallet;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CalendarManager {
-    private LocalDate startDate; // Unused for now
-    private LocalDate endDate; // Unused for now
+    private static volatile CalendarManager instance = null;
+    private Map<LocalDate, List<AbstractTransaction>> transactionsByDate;
 
     public CalendarManager() {
-        // Initialize with default or current values
-        this.startDate = LocalDate.now();
-        this.endDate = LocalDate.now();
+        transactionsByDate = new HashMap<>();
+        populateTransactionMap();
     }
 
-    public List<LocalDate> getDatesOfMonth(YearMonth yearMonth) {
-        List<LocalDate> dates = new ArrayList<>();
-        LocalDate start = yearMonth.atDay(1);
-        LocalDate end = yearMonth.atEndOfMonth();
-
-        while (!start.isAfter(end)) {
-            dates.add(start);
-            start = start.plusDays(1);
+    public static CalendarManager getInstance() {
+        if (instance == null) {
+            synchronized (CalendarManager.class) {
+                if (instance == null) {
+                    instance = new CalendarManager();
+                }
+            }
         }
-
-        return dates;
+        return instance;
     }
 
-    public List<LocalDate> getDatesOfYear(int year) {
-        List<LocalDate> dates = new ArrayList<>();
-        for (int month = 1; month <= 12; month++) {
-            YearMonth yearMonth = YearMonth.of(year, month);
-            dates.addAll(getDatesOfMonth(yearMonth));
+    private void populateTransactionMap() {
+        List<AbstractTransaction> allTransactions = Account.getInstance().getTransactions();
+        for (AbstractTransaction transaction : allTransactions) {
+            LocalDate date = transaction.getDate(); // Assuming getDate() returns a DateTime object
+            transactionsByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(transaction);
         }
-        return dates;
+    }
+
+    public List<AbstractTransaction> getTransactionsForDate(LocalDate date) {
+        return transactionsByDate.getOrDefault(date, new ArrayList<>());
+    }
+
+    public List<AbstractTransaction> getTransactionsForMonth(int year, int month) {
+        return transactionsByDate.entrySet().stream()
+                .filter(entry -> isSameYearAndMonth(entry.getKey(), year, month))
+                .flatMap(entry -> entry.getValue().stream())
+                .collect(Collectors.toList());
+    }
+
+    private boolean isSameYearAndMonth(LocalDate date, int year, int month) {
+        return date.getYear() == year && date.getMonthValue() == month;
+    }
+
+    public List<AbstractTransaction> getTransactionsForPeriod(LocalDate start, LocalDate end) {
+        return transactionsByDate.entrySet().stream()
+                .filter(entry -> !entry.getKey().isBefore(start) && !entry.getKey().isAfter(end))
+                .flatMap(entry -> entry.getValue().stream())
+                .collect(Collectors.toList());
     }
 }

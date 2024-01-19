@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Income extends AbstractTransaction {
     public Income(double amount, LocalDate date, String description, String categoryName) {
-        super(amount, date, description);
+        super(amount, date, description, TransactionPriority.NONE);
         this.category = new IncomeCategory(categoryName);
         this.type = "Income";
     }

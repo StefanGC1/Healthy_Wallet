@@ -1,32 +1,33 @@
-package com.example.healthy_wallet;
+package com.example.healthy_wallet.utils;
+
+import com.example.healthy_wallet.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.regex.Pattern;
-
-class ParsedData {
-    double amount;
-    LocalDate date;
-    String description;
-    String category;
-
-    public ParsedData(double amount, LocalDate date, String description, String category) {
-        this.amount = amount;
-        this.date = date;
-        this.description = description;
-        this.category = category;
-    }
-}
 
 public class FormDataParser {
 
-    public static ParsedData parseAndSanitize(String amountStr, String dateStr, String description, String category) throws InvalidDateException {
+    public static AbstractTransaction parseAndSanitizeTransactionData(String type, String amountStr, String dateStr, String description, String category, String priorityStr) throws InvalidDateException {
         double amount = parseAmount(amountStr);
         LocalDate date = parseDate(dateStr);
         description = sanitizeString(description, "No description");
         category = sanitizeString(category, "No category");
+        TransactionPriority priority = TransactionPriority.fromString(priorityStr);
 
-        return new ParsedData(amount, date, description, category);
+        if (type.equals("Income")) {
+            return new Income(
+                    amount,
+                    date,
+                    description,
+                    category);
+        } else {
+            return new Expense(
+                    amount,
+                    date,
+                    description,
+                    category,
+                    priority);
+        }
     }
 
     private static double parseAmount(String amountStr) throws IllegalArgumentException {
