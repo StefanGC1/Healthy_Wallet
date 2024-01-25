@@ -8,7 +8,6 @@ module com.example.healthy_wallet {
     requires org.kordamp.ikonli.javafx;
     requires com.google.gson;
     requires java.sql;
-    requires com.calendarfx.view;
     requires jfxtras.agenda;
     requires jfxtras.controls;
     requires jfxtras.common;

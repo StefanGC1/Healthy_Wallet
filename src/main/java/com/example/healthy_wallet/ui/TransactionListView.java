@@ -3,6 +3,7 @@ package com.example.healthy_wallet.ui;
 import com.example.healthy_wallet.AbstractTransaction;
 import com.example.healthy_wallet.Account;
 import com.example.healthy_wallet.MainApplication;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -38,11 +39,14 @@ public class TransactionListView {
         VBox contentBox = new VBox();
         contentBox.getStyleClass().add("content-box");
         contentBox.setMaxSize(600, 400);
+        contentBox.setAlignment(Pos.CENTER);
 
         Text someText = new Text("Transaction View Page");
-        someText.setFill(Color.WHITE);
+        someText.setFill(Color.web("#858585"));
         someText.setFont(Font.font(14));
         HBox buttonBox = new HBox();
+        buttonBox.setSpacing(15);
+        buttonBox.setAlignment(Pos.CENTER);
 
         Button addBtn = new Button("Add");
         Button removeBtn = new Button("Remove");

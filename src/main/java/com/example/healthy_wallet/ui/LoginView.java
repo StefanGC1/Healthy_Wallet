@@ -43,6 +43,7 @@ public class LoginView {
         someText.setFont(Font.font(14));
 
         VBox credentialsField = new VBox();
+        credentialsField.getStyleClass().add("credentials-field");
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter your username");
         PasswordField passwordField = new PasswordField();

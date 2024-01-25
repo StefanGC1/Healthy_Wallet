@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 
 public class ReportGenerationView {
     private StackPane root;
@@ -24,21 +25,8 @@ public class ReportGenerationView {
 
         setBackground(bgPane);
 
-        VBox contentBox = new VBox();
-        contentBox.getStyleClass().add("content-box");
-        contentBox.setMaxSize(400, 200);
-        contentBox.setAlignment(Pos.CENTER);
-        contentBox.setSpacing(20);
+        setOptionScene(uiPane);
 
-        Button generateReportButton = new Button("Generate Report");
-        Button backButton = new Button("Back");
-
-        ReportGenerationController reportGenerationController = new ReportGenerationController(this.mainApp);
-        backButton.setOnAction(reportGenerationController::handleBackButtonAction);
-
-        contentBox.getChildren().addAll(generateReportButton, backButton);
-
-        uiPane.setCenter(contentBox);
         root.getChildren().addAll(bgPane, uiPane);
 
         root.getStylesheets().add("file:src/main/resources/com/example/healthy_wallet/css/generalStyles.css");
@@ -56,8 +44,45 @@ public class ReportGenerationView {
         bgRegion.setEffect(blur);
     }
 
-    private void getFirstScene(BorderPane uiPane) {
+    private void setOptionScene(BorderPane uiPane) {
+        VBox contentBox = new VBox();
+        contentBox.getStyleClass().add("content-box");
+        contentBox.setMaxSize(400, 200);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setSpacing(20);
 
+        Button generateReportButton = new Button("Generate Report");
+        Button backButton = new Button("Back");
+
+        ReportGenerationController reportGenerationController = new ReportGenerationController(this.mainApp);
+        generateReportButton.setOnAction(e -> setReportScene(uiPane));
+        backButton.setOnAction(reportGenerationController::handleBackButtonAction);
+
+        contentBox.getChildren().addAll(generateReportButton, backButton);
+
+        uiPane.getChildren().clear();
+        uiPane.setCenter(contentBox);
+    }
+
+    private void setReportScene(BorderPane uiPane) {
+        VBox contentBox = new VBox();
+        contentBox.getStyleClass().add("content-box");
+        contentBox.setMaxSize(400, 200);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setSpacing(20);
+
+        Text someText = new Text("Report Generated");
+        Button generateReportButton = new Button("Generate Another Report");
+        Button backButton = new Button("Back");
+
+        ReportGenerationController reportGenerationController = new ReportGenerationController(this.mainApp);
+        generateReportButton.setOnAction(e -> setOptionScene(uiPane));
+        backButton.setOnAction(reportGenerationController::handleBackButtonAction);
+
+        contentBox.getChildren().addAll(generateReportButton, backButton);
+
+        uiPane.getChildren().clear();
+        uiPane.setCenter(contentBox);
     }
 
     public StackPane getView() {

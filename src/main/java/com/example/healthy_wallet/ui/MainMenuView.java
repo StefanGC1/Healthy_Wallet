@@ -37,6 +37,7 @@ public class MainMenuView {
         someText.setFont(Font.font(14));
         Button showListBtn = new Button("View Transactions");
         Button showCalendarBtn = new Button("Calendar View");
+        Button showReportGenBtn = new Button("Generate a Report");
         Button backBtn = new Button("Log out");
 
         VBox balanceBox = new VBox();
@@ -53,8 +54,9 @@ public class MainMenuView {
         backBtn.setOnAction(controller::handleBackButtonAction);
         showCalendarBtn.setOnAction(controller::handleCalendarButtonAction);
         showListBtn.setOnAction(controller::handleTransactionButtonAction);
+        showReportGenBtn.setOnAction(controller::handleReportGenButtonAction);
 
-        mainMenuBox.getChildren().addAll(someText, showListBtn, showCalendarBtn, backBtn, balanceBox);
+        mainMenuBox.getChildren().addAll(someText, showListBtn, showCalendarBtn, showReportGenBtn, backBtn, balanceBox);
 
         uiPane.setCenter(mainMenuBox);
         root.getChildren().addAll(bgPane, uiPane);

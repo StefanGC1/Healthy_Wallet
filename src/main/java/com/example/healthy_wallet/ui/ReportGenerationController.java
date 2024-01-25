@@ -14,10 +14,6 @@ public class ReportGenerationController {
 
     public void handleBackButtonAction(ActionEvent event) {
         Account.clearInstance();
-        mainApp.showLoginView();
-    }
-
-    public void handleReportGenerationButtonAction(StackPane root) {
-
+        mainApp.showMainMenuView();
     }
 }

@@ -59,6 +59,12 @@ public class MainApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    public void showReportGenerationVIew() {
+        ReportGenerationView reportGenerationView = new ReportGenerationView(this);
+        Scene scene = new Scene(reportGenerationView.getView(), 1000, 800);
+        primaryStage.setScene(scene);
+    }
+
     public void showAdminSceneView() {
         AdminSceneView adminSceneView = new AdminSceneView(this);
         Scene scene = new Scene(adminSceneView.getView(), 1000, 800);

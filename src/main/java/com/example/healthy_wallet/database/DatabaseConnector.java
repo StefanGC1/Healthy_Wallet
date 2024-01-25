@@ -4,7 +4,7 @@ import java.net.ConnectException;
 import java.sql.*;
 
 public class DatabaseConnector {
-    private final String url = "jdbc:mysql://localhost:3306/healthy_wallet"; // Replace with your database name
+    private final String url = "jdbc:mysql://localhost:3307/healthy_wallet"; // Replace with your database name
     private final String user = "appaccess"; // Replace with your MySQL username
     private final String password = "ddG#26"; // Replace with your MySQL password
     private static Connection dbConnection = null;

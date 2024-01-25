@@ -1,3 +1,12 @@
 .button {
     -fx-pref-width: 65;
 }
+
+.credentials-field {
+    -fx-max-width: 250;
+    -fx-spacing: 10;
+}
+
+.text-field {
+    -fx-max-height: 50;
+}

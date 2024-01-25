@@ -21,4 +21,6 @@ public class MainMenuController {
     }
 
     public void handleCalendarButtonAction(ActionEvent event) { mainApp.showCalendarSceneView(); }
+
+    public void handleReportGenButtonAction(ActionEvent event) { mainApp.showReportGenerationVIew();}
 }
