@@ -1,0 +1,17 @@
+.CalendarPickerControlSkin .highlight {
+    -fx-color: #ffb768;
+}
+
+.CalendarPickerControlSkin .today-button {
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-border-color: transparent;
+}
+
+.CalendarPicker {
+    -fx-background-color: rgba(213, 179, 35, 0.5);
+    -fx-alignment: center;
+    -fx-border-radius: 10;
+    -fx-background-radius:10;
+}

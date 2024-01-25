@@ -1,9 +1,5 @@
 package com.example.healthy_wallet;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +7,7 @@ public class Account {
 	private static volatile Account instance = null;
     private double balance;
     private int userID;
+    private String username;
     private List<AbstractTransaction> transactions;
 
     public Account() {
@@ -79,6 +76,8 @@ public class Account {
     }
     public void setUserID(int _userID) { this.userID = _userID; }
     public int getUserID() { return userID; }
+    public void setUsername(String _username) { this.username = _username; }
+    public String getUsername() { return username; }
 
     public List<AbstractTransaction> getTransactions() { return transactions; }
     // Additional utility methods as needed

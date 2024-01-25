@@ -7,11 +7,17 @@ import java.time.format.DateTimeParseException;
 
 public class FormDataParser {
 
-    public static AbstractTransaction parseAndSanitizeTransactionData(String type, String amountStr, String dateStr, String description, String category, String priorityStr) throws InvalidDateException {
+    public static AbstractTransaction parseAndSanitizeTransactionData(
+            String type,
+            String amountStr,
+            String dateStr,
+            String description,
+            String category,
+            String priorityStr) throws InvalidDateException {
         double amount = parseAmount(amountStr);
         LocalDate date = parseDate(dateStr);
-        description = sanitizeString(description, "No description");
-        category = sanitizeString(category, "No category");
+        description = sanitizeTransactionString(description, "No description");
+        category = sanitizeTransactionString(category, "No category");
         TransactionPriority priority = TransactionPriority.fromString(priorityStr);
 
         if (type.equals("Income")) {
@@ -28,6 +34,14 @@ public class FormDataParser {
                     category,
                     priority);
         }
+    }
+
+    public static String sanitizeCredentialString(String _credString) throws IllegalArgumentException {
+        if (_credString == null || _credString.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username or Password cannot be empty.");
+        }
+        _credString = _credString.replaceAll("[^\\w\\s()@]", "");
+        return _credString;
     }
 
     private static double parseAmount(String amountStr) throws IllegalArgumentException {
@@ -51,7 +65,7 @@ public class FormDataParser {
         }
     }
 
-    private static String sanitizeString(String str, String defaultValue) {
+    private static String sanitizeTransactionString(String str, String defaultValue) {
         if (str == null || str.trim().isEmpty()) {
             return defaultValue;
         }

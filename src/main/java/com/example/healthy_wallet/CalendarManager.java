@@ -8,23 +8,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CalendarManager {
-    private static volatile CalendarManager instance = null;
     private Map<LocalDate, List<AbstractTransaction>> transactionsByDate;
 
     public CalendarManager() {
         transactionsByDate = new HashMap<>();
         populateTransactionMap();
-    }
-
-    public static CalendarManager getInstance() {
-        if (instance == null) {
-            synchronized (CalendarManager.class) {
-                if (instance == null) {
-                    instance = new CalendarManager();
-                }
-            }
-        }
-        return instance;
     }
 
     private void populateTransactionMap() {
@@ -33,6 +21,10 @@ public class CalendarManager {
             LocalDate date = transaction.getDate(); // Assuming getDate() returns a DateTime object
             transactionsByDate.computeIfAbsent(date, k -> new ArrayList<>()).add(transaction);
         }
+    }
+
+    public List<LocalDate> getAllTransactionDates() {
+        return new ArrayList<>(transactionsByDate.keySet());
     }
 
     public List<AbstractTransaction> getTransactionsForDate(LocalDate date) {

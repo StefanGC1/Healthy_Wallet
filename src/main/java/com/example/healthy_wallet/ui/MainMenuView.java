@@ -1,10 +1,14 @@
 package com.example.healthy_wallet.ui;
 
+import com.example.healthy_wallet.Account;
 import com.example.healthy_wallet.MainApplication;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class MainMenuView {
@@ -24,22 +28,35 @@ public class MainMenuView {
 
         setBackground(bgPane);
 
-        VBox loginBox = new VBox();
-        loginBox.getStyleClass().add("content-box");
-        loginBox.setMaxSize(400, 200);
+        VBox mainMenuBox = new VBox();
+        mainMenuBox.getStyleClass().add("content-box");
+        mainMenuBox.setMaxSize(400, 200);
 
-        Text someText = new Text("Main Menu page");
+        Text someText = new Text("Welcome, " + Account.getInstance().getUsername());
+        someText.setFill(Color.WHITE);
+        someText.setFont(Font.font(14));
         Button showListBtn = new Button("View Transactions");
+        Button showCalendarBtn = new Button("Calendar View");
         Button backBtn = new Button("Log out");
 
-        // Set the controller to handle button actions
+        VBox balanceBox = new VBox();
+        balanceBox.setAlignment(Pos.CENTER);
+        balanceBox.setSpacing(10);
+        Text someText2 = new Text("Your current balance is");
+        someText2.setFill(Color.WHITE);
+        Text balanceText = new Text(Account.getInstance().getBalance() + "$");
+        balanceText.setFill(Color.web("#ffea00"));
+        balanceText.setFont(Font.font(14));
+        balanceBox.getChildren().addAll(someText2, balanceText);
+
         MainMenuController controller = new MainMenuController(mainApp);
         backBtn.setOnAction(controller::handleBackButtonAction);
+        showCalendarBtn.setOnAction(controller::handleCalendarButtonAction);
         showListBtn.setOnAction(controller::handleTransactionButtonAction);
 
-        loginBox.getChildren().addAll(someText, showListBtn, backBtn);
+        mainMenuBox.getChildren().addAll(someText, showListBtn, showCalendarBtn, backBtn, balanceBox);
 
-        uiPane.setCenter(loginBox);
+        uiPane.setCenter(mainMenuBox);
         root.getChildren().addAll(bgPane, uiPane);
 
         root.getStylesheets().add("file:src/main/resources/com/example/healthy_wallet/css/generalStyles.css");

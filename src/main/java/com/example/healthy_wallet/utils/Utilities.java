@@ -3,14 +3,19 @@ package com.example.healthy_wallet.utils;
 import com.example.healthy_wallet.*;
 import com.example.healthy_wallet.database.DatabaseConnector;
 import com.example.healthy_wallet.ui.admin_scene_classes.UserInfo;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import jfxtras.scene.control.CalendarPicker;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Utilities {
@@ -141,6 +146,23 @@ public class Utilities {
             }
         } catch (SQLException e) {
             showErrorAlert(e.getMessage());
+        }
+    }
+
+    private static Calendar localDateToCalendar(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(java.util.Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        return calendar;
+    }
+
+    public static void addLocalDatesToCalendarPicker(CalendarPicker calendarPicker, List<LocalDate> localDates) {
+        ObservableList<Calendar> calendars = calendarPicker.highlightedCalendars(); // or calendarPicker.calendars() for selected dates
+
+        for (LocalDate localDate : localDates) {
+            calendars.add(localDateToCalendar(localDate));
         }
     }
 }

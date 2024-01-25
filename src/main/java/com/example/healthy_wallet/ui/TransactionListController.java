@@ -12,10 +12,7 @@ public class TransactionListController {
         this.transactionListView = transactionListView;
     }
 
-    public void handleBackButtonAction(ActionEvent event) {
-        // Logic for login action
-        mainApp.showMainMenuView();
-    }
+    public void handleBackButtonAction(ActionEvent event) { mainApp.showMainMenuView(); }
 
     public void handleAddButtonAction(ActionEvent event) {
         AddTransactionForm.display(mainApp.getPrimaryStage(), transactionListView.getTransactionList());

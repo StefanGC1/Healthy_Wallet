@@ -4,12 +4,15 @@ import com.example.healthy_wallet.MainApplication;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -36,6 +39,8 @@ public class LoginView {
         loginBox.setMaxSize(400, 200);
 
         Text someText = new Text("Login page");
+        someText.setFill(Color.WHITE);
+        someText.setFont(Font.font(14));
 
         VBox credentialsField = new VBox();
         TextField usernameField = new TextField();
@@ -44,6 +49,9 @@ public class LoginView {
         passwordField.setPromptText("Enter your password");
 
         HBox buttonBox = new HBox();
+        buttonBox.setSpacing(15);
+        buttonBox.setAlignment(Pos.CENTER);
+
         Button loginBtn = new Button("Login");
         Button registerBtn = new Button("Register");
         // Set the controller to handle button actions

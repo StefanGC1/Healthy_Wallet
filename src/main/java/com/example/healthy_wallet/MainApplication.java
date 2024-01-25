@@ -1,10 +1,7 @@
 package com.example.healthy_wallet;
 
 import com.example.healthy_wallet.database.DatabaseConnector;
-import com.example.healthy_wallet.ui.AdminSceneView;
-import com.example.healthy_wallet.ui.LoginView;
-import com.example.healthy_wallet.ui.MainMenuView;
-import com.example.healthy_wallet.ui.TransactionListView;
+import com.example.healthy_wallet.ui.*;
 import com.example.healthy_wallet.utils.FileStorage;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -53,6 +50,12 @@ public class MainApplication extends Application {
     public void showTransactionListview() {
         TransactionListView transactionListView = new TransactionListView(this);
         Scene scene = new Scene(transactionListView.getView(), 1000, 800);
+        primaryStage.setScene(scene);
+    }
+
+    public void showCalendarSceneView() {
+        CalendarSceneView calendarSceneView = new CalendarSceneView(this);
+        Scene scene = new Scene(calendarSceneView.getView(), 1000, 800);
         primaryStage.setScene(scene);
     }
 

@@ -9,6 +9,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
@@ -37,7 +39,9 @@ public class TransactionListView {
         contentBox.getStyleClass().add("content-box");
         contentBox.setMaxSize(600, 400);
 
-        Text someText = new Text("Transaction View page");
+        Text someText = new Text("Transaction View Page");
+        someText.setFill(Color.WHITE);
+        someText.setFont(Font.font(14));
         HBox buttonBox = new HBox();
 
         Button addBtn = new Button("Add");

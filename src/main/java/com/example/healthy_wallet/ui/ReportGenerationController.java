@@ -3,11 +3,12 @@ package com.example.healthy_wallet.ui;
 import com.example.healthy_wallet.Account;
 import com.example.healthy_wallet.MainApplication;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.StackPane;
 
-public class MainMenuController {
+public class ReportGenerationController {
     private MainApplication mainApp;
 
-    public MainMenuController(MainApplication mainApp) {
+    public ReportGenerationController(MainApplication mainApp) {
         this.mainApp = mainApp;
     }
 
@@ -16,9 +17,7 @@ public class MainMenuController {
         mainApp.showLoginView();
     }
 
-    public void handleTransactionButtonAction(ActionEvent event) {
-        mainApp.showTransactionListview();
-    }
+    public void handleReportGenerationButtonAction(StackPane root) {
 
-    public void handleCalendarButtonAction(ActionEvent event) { mainApp.showCalendarSceneView(); }
+    }
 }

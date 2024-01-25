@@ -83,8 +83,6 @@ public class AddTransactionForm {
 
                 thread.start();
 
-//                Utilities.addTransactionToDatabase(newTransaction);
-
                 dialog.setResult(ButtonType.OK);
             } catch (IllegalArgumentException | InvalidDateException e) {
                 Utilities.showErrorAlert(e.getMessage());
